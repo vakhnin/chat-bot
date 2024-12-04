@@ -1,23 +1,37 @@
 import os
-
 from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    MessageHandler,
+    ContextTypes,
+    filters
+)
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text('Привет! Я ваш бот для мониторинга курсов валют.')
+    await update.message.reply_text('Привет! Я ваш бот для мониторинга курсов валют. Как я могу помочь?')
+
+
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(update.message.text)
+
 
 def main() -> None:
     token = os.getenv("BOT_TOKEN")
     if not token:
         raise ValueError("Переменная окружения BOT_TOKEN не установлена!")
-    # Create an Application instance
+
+    # Создаем экземпляр Application
     application = Application.builder().token(token).build()
 
-    # Add the command handler
+    # Добавляем обработчики
     application.add_handler(CommandHandler("start", start))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
-    # Start the bot
+    # Запускаем бота
     application.run_polling()
+
 
 if __name__ == '__main__':
     main()
