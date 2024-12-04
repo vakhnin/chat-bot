@@ -1,4 +1,6 @@
+import logging
 import os
+
 from telegram import Update
 from telegram.ext import (
     Application,
@@ -8,8 +10,14 @@ from telegram.ext import (
     filters
 )
 
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logging.info(f"Пользователь {update.effective_user.id} отправил команду /start")
     await update.message.reply_text('Привет! Я ваш бот для мониторинга курсов валют. Как я могу помочь?')
 
 
