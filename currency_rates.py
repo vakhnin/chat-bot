@@ -12,9 +12,21 @@ def get_currency_rates(api_key: str) -> dict:
         raise Exception("Ошибка при получении данных от API")
 
 
+def process_currency_data(data: dict) -> float:
+    usd_to_rub = data['rates']['RUB']
+    return usd_to_rub
+
+
+def format_currency_data(currency_name: str, rate: float) -> str:
+    return f"Курс {currency_name}: {rate:.2f}"
+
+
 if __name__ == '__main__':
+    currency_name = "USD/RUB"
     api_key = os.getenv("API_KEY")
     if not api_key:
         raise ValueError("Переменная окружения API_KEY не установлена!")
-    rates = get_currency_rates(api_key)
-    print(rates)
+    currency_data = get_currency_rates(api_key)
+    usd_to_rub = process_currency_data(currency_data)
+    formatted_data = format_currency_data(currency_name, usd_to_rub)
+    print(formatted_data)
