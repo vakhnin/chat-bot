@@ -40,11 +40,8 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def convert(update: Update, context: CallbackContext) -> None:
-    print(111)
     try:
-        api_key = os.getenv("API_KEY")
-        if not api_key:
-            raise ValueError("Переменная окружения API_KEY не установлена!")
+        api_key = context.bot_data['api_key']
         amount = float(context.args[0])
         from_currency = context.args[1].upper()
         to_currency = context.args[2].upper()
@@ -61,13 +58,19 @@ def main() -> None:
     token = os.getenv("BOT_TOKEN")
     if not token:
         raise ValueError("Переменная окружения BOT_TOKEN не установлена!")
+    api_key = os.getenv("API_KEY")
+    if not api_key:
+        raise ValueError("Переменная окружения API_KEY не установлена!")
 
     # Создаем экземпляр Application
     application = Application.builder().token(token).build()
 
+    application.bot_data['api_key'] = api_key
+
     # Добавляем обработчики
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("convert", convert))
+    # application.add_handler(CommandHandler("set_threshold", set_threshold))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
     # Запускаем бота
