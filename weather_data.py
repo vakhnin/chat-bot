@@ -12,6 +12,13 @@ def get_weather_data(api_key: str, city: str) -> dict:
         raise Exception("Ошибка при получении данных от API")
 
 
+def format_weather_data(data: dict) -> str:
+    city = data['name']
+    temperature = data['main']['temp']
+    weather_description = data['weather'][0]['description']
+    return f"Погода в {city}: {temperature}°C, {weather_description}"
+
+
 if __name__ == '__main__':
     api_weather_key = os.getenv("API_WEATHER_KEY")
     if not api_weather_key:
