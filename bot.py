@@ -1,6 +1,7 @@
 import logging
 import os
 
+from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import (
     Application,
@@ -102,6 +103,8 @@ async def weather(update: Update, context: CallbackContext) -> None:
 
 
 def main() -> None:
+    load_dotenv()
+
     token = os.getenv("BOT_TOKEN")
     if not token:
         raise ValueError("Переменная окружения BOT_TOKEN не установлена!")
